@@ -10,6 +10,7 @@ if sys.version_info.major == 3:
 else:
     _FileExistsError = OSError
 
+pyrobuf_proto3_val = False
 
 def add_pyrobuf_module(dist, pyrobuf_module):
     dir_name = "pyrobuf/_" + pyrobuf_module
@@ -18,7 +19,7 @@ def add_pyrobuf_module(dist, pyrobuf_module):
         os.makedirs(os.path.join(dir_name, package))
     except _FileExistsError:
         pass
-    compiler = Compiler([pyrobuf_module], out=dir_name, package=package)
+    compiler = Compiler([pyrobuf_module], out=dir_name, package=package, proto3=pyrobuf_proto3_val)
     compiler.extend(dist)
 
 
@@ -29,3 +30,9 @@ def pyrobuf_modules(dist, attr, value):
 
     for pyrobuf_module in value:
         add_pyrobuf_module(dist, pyrobuf_module)
+
+
+def pyrobuf_proto3(dist, attr, value):
+    assert attr == 'pyrobuf_proto3'
+    if isinstance(value, bool):
+        pyrobuf_proto3_val = value
